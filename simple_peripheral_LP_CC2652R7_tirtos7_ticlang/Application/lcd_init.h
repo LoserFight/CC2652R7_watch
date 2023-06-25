@@ -36,6 +36,7 @@
 
 
 //void LCD_Writ_Bus(uint8_t dat);//模拟SPI时序
+void spi_write(const void *data, uint32_t size);
 void LCD_WR_DATA8(uint8_t dat);//写入一个字节
 void LCD_WR_DATA(uint16_t dat);//写入两个字节
 void LCD_WR_REG(uint8_t dat);//写入一个指令

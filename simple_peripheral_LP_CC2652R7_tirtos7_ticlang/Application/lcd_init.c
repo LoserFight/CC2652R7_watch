@@ -5,7 +5,7 @@
 
 SPI_Handle  spi_h;
 
-static inline void spi_write(const void *data, uint32_t size)
+void spi_write(const void *data, uint32_t size)
 {
 //    if (size > SPI_MAX_BLOCK) {
 //        uint32_t rest  = size;
@@ -157,7 +157,7 @@ void LCD_Init(void)
         SPI_Params  spiParams;
         SPI_Params_init(&spiParams);
         spiParams.dataSize = 8;       // 8-bit data size
-        spiParams.bitRate=1000000;
+        spiParams.bitRate=5000000;
         spiParams.frameFormat=SPI_POL1_PHA1;
         spi = SPI_open(CONFIG_SPI_0_CONST, &spiParams);
         spi_h=spi;

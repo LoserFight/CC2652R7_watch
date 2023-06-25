@@ -544,6 +544,7 @@ void LCD_ShowPicture(uint16_t x,uint16_t y,uint16_t length,uint16_t width,const 
 	uint16_t i,j;
 	uint32_t k=0;
 	LCD_Address_Set(x,y,x+length-1,y+width-1);
+	uint32_t buffL=2*length*width;
 	for(i=0;i<length;i++)
 	{
 		for(j=0;j<width;j++)
@@ -552,7 +553,9 @@ void LCD_ShowPicture(uint16_t x,uint16_t y,uint16_t length,uint16_t width,const 
 			LCD_WR_DATA8(pic[k*2+1]);
 			k++;
 		}
-	}			
+	}
+	   //spi_write(pic,buffL);
+
 }
 
 

@@ -754,7 +754,7 @@ static void SimplePeripheral_init(void)
 
   LCD_Init();
   LCD_Fill(0,0,LCD_W,LCD_H,WHITE);
-  LCD_ShowPicture(50,0,135,240,gImage_picmeng);
+  LCD_ShowPicture(1,0,238,240,gImage_base6);
 
 
   I2C_init();
@@ -768,7 +768,7 @@ static void SimplePeripheral_init(void)
   max_write_id=0;
   buf_id=20; //20 表示刚开始 10表示前200个数据可以被使用，1代表后200个数据可以被使用。
   //GPIO_enableInt(CONFIG_MAX30102_INT);
-  //GUA_RTC_Init();
+  GUA_RTC_Init();
 
 
 
@@ -1522,9 +1522,13 @@ static void SimplePeripheral_performPeriodicTask(void)
   ADC_close(adc);
   uint32_t SampleV=(uint32_t)adcValue;
 
-//  UTCTimeStruct GUA_Timer;
-//  GUA_RTC_Get(&GUA_Timer);
-//  Display_printf(dispHandle, 15, 0, "%d %d %d %d %d",GUA_Timer.year,GUA_Timer.month,GUA_Timer.day, GUA_Timer.hour,GUA_Timer.minutes);
+  UTCTimeStruct GUA_Timer;
+  GUA_RTC_Get(&GUA_Timer);
+  Display_printf(dispHandle, 15, 0, "%d %d %d %d %d",GUA_Timer.year,GUA_Timer.month,GUA_Timer.day, GUA_Timer.hour,GUA_Timer.minutes);
+
+  LCD_ShowIntNum(88,40,GUA_Timer.hour,2,BLACK,WHITE,32);//显示整数变量
+  LCD_ShowChar(125,40,':',BLACK,WHITE,32,0);
+  LCD_ShowIntNum(150,40,GUA_Timer.minutes,2,BLACK,WHITE,32);//显示整数变量
 
     simpleValue.pValue = GATT_bm_alloc(gapConnHandle,
                                                ATT_HANDLE_VALUE_NOTI,
