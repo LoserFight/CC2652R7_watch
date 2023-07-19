@@ -378,6 +378,7 @@ static uint32_t max_read_Buf_red[max_30102_buf];
 uint16_t max_write_id;
 uint8_t buf_id;
 int32_t heart_rate;
+float temperatureDiff;
 float spo2;
 /*********************************************************************
  * LOCAL FUNCTIONS
@@ -1529,6 +1530,28 @@ static void SimplePeripheral_performPeriodicTask(void)
   LCD_ShowIntNum(88,40,GUA_Timer.hour,2,BLACK,WHITE,32);//显示整数变量
   LCD_ShowChar(125,40,':',BLACK,WHITE,32,0);
   LCD_ShowIntNum(150,40,GUA_Timer.minutes,2,BLACK,WHITE,32);//显示整数变量
+  uint8_t mflag=0;
+  if(temperatureDiff<0.0){
+      LCD_ShowChar(90,174,'-',BLACK,WHITE,32,0);
+      temperatureDiff=-1.0*temperatureDiff;
+      mflag=1;
+  }
+  else{
+      LCD_ShowChar(90,174,' ',BLACK,WHITE,32,0);
+  }
+  uint8_t floatLen=3;
+  if(temperatureDiff>10){
+      floatLen=4;
+  }
+  LCD_ShowFloatNum1(118,174,temperatureDiff,floatLen,BLACK,WHITE,32);
+  if(mflag==1){
+      temperatureDiff=-1.0*temperatureDiff;
+  }
+
+
+
+
+
 
     simpleValue.pValue = GATT_bm_alloc(gapConnHandle,
                                                ATT_HANDLE_VALUE_NOTI,
@@ -2870,11 +2893,30 @@ static void SPA_performPeriodicTask(void)
                 Display_printf(dispHandle, 12, 0, "HR: %d, valid: %d", pn_heart_rate,pch_hr_valid);
 
                //
-//                        for(uint16_t i=0;i<20;i++){
-//                            Display_printf(dispHandle, i+20, 0, "%d %d %d %d %d",max_read_Buf_red[i],max_read_Buf_red[i+20],max_read_Buf_red[i+40],max_read_Buf_red[i+60],max_read_Buf_red[i+80]);
-//                        }
+                        for(uint16_t i=0;i<20;i++){
+                            Display_printf(dispHandle, i+20, 0, "%d %d %d %d %d",max_read_Buf_red[i],max_read_Buf_red[i+20],max_read_Buf_red[i+40],max_read_Buf_red[i+60],max_read_Buf_red[i+80]);
+                        }
                         if(pch_hr_valid==1){
                             heart_rate=pn_heart_rate;
+                            LCD_ShowIntNum(118,123,heart_rate,3,RED,WHITE,32);
+
+                            simpleValue.pValue = GATT_bm_alloc(gapConnHandle,
+                                                                       ATT_HANDLE_VALUE_NOTI,
+                                                                       SIMPLEPROFILE_CHAR6_LEN, NULL);
+                                if(simpleValue.pValue != NULL)
+                                {
+                                    uint8_t *p = simpleValue.pValue;
+                                    *(p + 3) = (uint8_t)(0xFF & pn_heart_rate);
+                                    *(p + 2) = (uint8_t)((0xFF00 & pn_heart_rate) >> 8);
+                                    *(p + 1) = (uint8_t)((0xFF0000 & pn_heart_rate) >> 16);
+                                    *(p) = (uint8_t)((0xFF000000 & pn_heart_rate) >> 24)|0x10;
+                                    simpleValue.len = (uint8_t)(p+4 - simpleValue.pValue);
+                                    if(SimpleProfile_Notification(gapConnHandle,&simpleValue) != SUCCESS)
+                                    {
+                                        Display_print1(dispHandle, 16, 0, "no success,0x%x",*simpleValue.pValue);
+                                        GATT_bm_free((gattMsg_t *)&simpleValue, ATT_HANDLE_VALUE_NOTI);
+                                    }
+                                }
                         }
 
             }
@@ -2889,11 +2931,29 @@ static void SPA_performPeriodicTask(void)
             float correl;
             rf_heart_rate_and_oxygen_saturation(&(max_read_Buf[max_30102_buf/2]), max_30102_buf/2, &(max_read_Buf_red[max_30102_buf/2]), &pn_spo2, &pch_spo2_valid, &pn_heart_rate,&pch_hr_valid, &ratio, &correl);
             Display_printf(dispHandle, 12, 0, "HR: %d, valid: %d", pn_heart_rate,pch_hr_valid);
-           // Display_printf(dispHandle, 12, 0, "HR: %d, valid: %d", pn_heart_rate,pch_hr_valid);
-//            for(uint16_t i=200;i<400;i++){
-//                Display_printf(dispHandle, 19+i, 15, "%d %d", max_read_Buf_red[i],max_read_Buf[i]);
-//            }
 
+            if(pch_hr_valid==1){
+                heart_rate=pn_heart_rate;
+                LCD_ShowIntNum(118,123,heart_rate,3,RED,WHITE,32);
+
+                simpleValue.pValue = GATT_bm_alloc(gapConnHandle,
+                                                           ATT_HANDLE_VALUE_NOTI,
+                                                           SIMPLEPROFILE_CHAR6_LEN, NULL);
+                    if(simpleValue.pValue != NULL)
+                    {
+                        uint8_t *p = simpleValue.pValue;
+                        *(p + 3) = (uint8_t)(0xFF & pn_heart_rate);
+                        *(p + 2) = (uint8_t)((0xFF00 & pn_heart_rate) >> 8);
+                        *(p + 1) = (uint8_t)((0xFF0000 & pn_heart_rate) >> 16);
+                        *(p) = (uint8_t)((0xFF000000 & pn_heart_rate) >> 24)|0x10;
+                        simpleValue.len = (uint8_t)(p+4 - simpleValue.pValue);
+                        if(SimpleProfile_Notification(gapConnHandle,&simpleValue) != SUCCESS)
+                        {
+                            Display_print1(dispHandle, 16, 0, "no success,0x%x",*simpleValue.pValue);
+                            GATT_bm_free((gattMsg_t *)&simpleValue, ATT_HANDLE_VALUE_NOTI);
+                        }
+                    }
+            }
         }
     }
     //Util_startClock(&clk_MAXRead);

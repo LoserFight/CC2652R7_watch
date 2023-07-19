@@ -126,29 +126,9 @@
 			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/ble5stack/npi/src/npi_tl_uart.c</locationURI>
 		</link>
 		<link>
-			<name>Profiles/devinfoservice.c</name>
-			<type>1</type>
-			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/ble5stack/profiles/dev_info/cc26xx/devinfoservice.c</locationURI>
-		</link>
-		<link>
-			<name>Profiles/devinfoservice.h</name>
-			<type>1</type>
-			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/ble5stack/profiles/dev_info/devinfoservice.h</locationURI>
-		</link>
-		<link>
 			<name>Profiles/gatt_profile_uuid.h</name>
 			<type>1</type>
 			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/ble5stack/inc/gatt_profile_uuid.h</locationURI>
-		</link>
-		<link>
-			<name>Profiles/simple_gatt_profile.c</name>
-			<type>1</type>
-			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/ble5stack/profiles/simple_profile/cc26xx/simple_gatt_profile.c</locationURI>
-		</link>
-		<link>
-			<name>Profiles/simple_gatt_profile.h</name>
-			<type>1</type>
-			<locationURI>COM_TI_SIMPLELINK_CC13XX_CC26XX_SDK_INSTALL_DIR/source/ti/ble5stack/profiles/simple_profile/simple_gatt_profile.h</locationURI>
 		</link>
 		<link>
 			<name>Startup/rom_init.c</name>
